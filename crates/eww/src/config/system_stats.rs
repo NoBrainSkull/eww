@@ -149,8 +149,12 @@ pub fn get_battery_capacity() -> Result<String> {
             }
         }
     }
-    json.pop();
-    json.push_str(&format!(r#", "total_avg": {:.1}}}"#, (current / total) * 100_f64));
+    // json will be empty for computers with no battery
+    if let Some(_char) = json.pop() {
+        json.push_str(&format!(r#", "total_avg": {:.1}}}"#, (current / total) * 100_f64));
+    } else {
+        json.push_str("null");
+    }
 
     Ok(json)
 }
